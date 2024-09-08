@@ -22,8 +22,7 @@ To run this project locally, you need:
 1. **Clone the repository**:
    Open a terminal, and run:
    ```bash
-   git clone https://github.com/your-repo/cms-api.git
-   cd cms-api
+   git clone https://github.com/MixalisVak/cloud_native_challenge.git
 
 
 2. **Install the dependencies**
