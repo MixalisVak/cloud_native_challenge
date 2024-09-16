@@ -2,30 +2,32 @@ const db = require('../db');
 
 // Create a new article
 exports.createArticle = async (req, res) => {
-    const { title, content, image } = req.body;  // Using image path
-  
-    try {
-      // Insert the image into the images table
-      const [imageResult] = await db.execute(
-        'INSERT INTO images (image_path) VALUES (?)',
-        [image]
-      );
-  
-      const imageId = imageResult.insertId;  // Get the image_id from the insertion
-  
-      // Insert the article with the associated image_id
-      const [articleResult] = await db.execute(
-        'INSERT INTO articles (title, content, image_id) VALUES (?, ?, ?)',
-        [title, content, imageId]
-      );
-  
-      res.status(201).json({
-        message: 'Article created successfully',
-        articleId: articleResult.insertId
-      });
-    } catch (error) {
-      res.status(500).json({ message: 'Error creating article', error });
-    }
+  const { title, content, image } = req.body;
+
+  try {
+    // Step 1: Insert the article into the articles table
+    const [articleResult] = await db.execute(
+      'INSERT INTO articles (title, content) VALUES (?, ?)',
+      [title, content]
+    );
+
+    // Step 2: Retrieve the articleId from the result of the article insert
+    const articleId = articleResult.insertId;  // The newly created article's ID
+
+    // Step 3: Insert the associated image into the images table with the correct articleId
+    const [imageResult] = await db.execute(
+      'INSERT INTO images (image_path, article_id) VALUES (?, ?)',
+      [image, articleId]  // Use the articleId from the previous insert
+    );
+
+    res.status(201).json({
+      message: 'Article and image created successfully',
+      articleId: articleId,
+      imageId: imageResult.insertId
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating article', error });
+  }
 };
 
 // Get all articles
@@ -49,7 +51,7 @@ exports.getArticleById = async (req, res) => {
       if (article.length === 0) {
         return res.status(404).json({ message: 'Article not found' });
       }
-  
+      console.log('article', article)
       res.status(200).json({ article: article[0] });
     } catch (error) {
       res.status(500).json({ message: 'Error fetching article', error });
@@ -64,9 +66,10 @@ exports.updateArticle = async (req, res) => {
     try {
       // Update the image in the images table
       // This creates a new image in the table. For this implementation it's fine. But in a big project, this could lead to duplicates records.
+    
       const [imageResult] = await db.execute(
-        'INSERT INTO images (image_path) VALUES (?)',
-        [image]
+        'INSERT INTO images (image_path, article_id) VALUES (?, ?)',
+        [image, id] // `articleId` is the id of the article associated with the image
       );
   
       const imageId = imageResult.insertId;

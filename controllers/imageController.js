@@ -22,17 +22,24 @@ exports.uploadImage = async (req, res) => {
 
 // Get an image by ID
 exports.getImageById = async (req, res) => {
-    const { id } = req.params;
-  
-    try {
-      const [image] = await db.execute('SELECT * FROM images WHERE id = ?', [id]);
-  
-      if (image.length === 0) {
-        return res.status(404).json({ message: 'Image not found' });
-      }
-  
-      res.status(200).json({ image: image[0] });
-    } catch (error) {
-      res.status(500).json({ message: 'Error fetching image', error });
+  const { id } = req.params;
+
+  try {
+    // Modify the query to join images and articles table
+    const [image] = await db.execute(`
+      SELECT images.id AS image_id, images.image_path, images.article_id, articles.title, articles.content
+      FROM images
+      LEFT JOIN articles ON images.article_id = articles.id
+      WHERE images.id = ?
+    `, [id]);
+
+    if (image.length === 0) {
+      return res.status(404).json({ message: 'Image not found' });
     }
+
+    // Return the image with associated article details
+    res.status(200).json({ image: image[0] });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching image', error });
+  }
 };
