@@ -17,6 +17,11 @@ To run this project locally, you need:
 - [MySQL](https://www.mysql.com/) installed and running
 - [Postman](https://www.postman.com/) or any API testing tool to test the API
 
+## Optional Tools
+
+- **MySQL Workbench**: You can use MySQL Workbench to manage the database, run queries, and visualize the schema if you prefer a GUI over command-line tools.
+
+
 ## Installation
 
 1. **Clone the repository**:
@@ -28,7 +33,11 @@ To run this project locally, you need:
 2. **Install the dependencies**
     Run "npm install"
 
-3. **Create a .env file in the root directory with the following contents**:
+3. **Database Design**:
+   - Designed a **MySQL** database with three tables: `articles`, `images`, and `users`.
+   - Used **MySQL Workbench** (optional) to visually manage the database and run SQL queries.
+
+4. **Create a .env file in the root directory with the following contents**:
     DB_HOST=host_of_the_db
     DB_USER=user_of_the_db
     DB_PASSWORD=your_password_here
@@ -36,7 +45,7 @@ To run this project locally, you need:
     DB_PORT= port_of_the_db
     JWT_SECRET=your_generated_jwt_secret_here
 
-4. **Create the MySQL database and tables**:
+5. **Create the MySQL database and tables**:
     CREATE DATABASE your_database_name;
     USE your_database_name;
 
