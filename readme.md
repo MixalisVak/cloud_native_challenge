@@ -70,7 +70,7 @@ To run this project locally, you need:
     role ENUM('admin', 'guest') NOT NULL
     );
 
-5. **Create A user**
+6. **Create A user**
     Create an "admin" user, so you can test the APIs"
     1. Create a hashed password through the hashPassword.js file and run this file "node hashPassword.js.
     2. Get this hashed_password and create a user in the DB with step 3.
